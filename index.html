@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Makna Tersurat & Tersirat Cerpen</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: #f1f5f9;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #60a5fa;
+        }
+
+        /* Nav active state */
+        .nav-active {
+            background-color: #1d4ed8;
+            color: #ffffff;
+            border-bottom: 3px solid #60a5fa;
+        }
+
+        /* Sub-tab active state */
+        .sub-tab-active {
+            background-color: #2563eb;
+            color: #ffffff;
+            border-color: #3b82f6;
+        }
+
+        /* Drag and Drop styles */
+        .drag-item {
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+        .drag-item:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+        .drop-zone-active {
+            border-color: #60a5fa;
+            background-color: rgba(30, 58, 138, 0.5);
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="flex flex-col justify-between overflow-x-hidden">
+
+    <!-- TOP HEADER NAVBAR & CONTROLS -->
+    <header class="sticky top-0 z-40 bg-slate-900/95 border-b border-slate-800 backdrop-blur-md px-4 py-3 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Logo / Judul Aplikasi -->
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 text-white p-2 rounded-lg shadow-inner animate-pulse">
+                    <i class="fa-solid fa-book-open text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold tracking-tight text-white">SastraPintar</h1>
+                    <p class="text-xs text-blue-400 font-medium">Makna Tersurat & Tersirat SMP</p>
+                </div>
+            </div>
+
+            <!-- Navigasi Utama (Horisontal) -->
+            <nav id="main-nav" class="flex flex-wrap items-center justify-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                <button onclick="switchPage('beranda')" id="nav-beranda" class="nav-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:text-white hover:bg-slate-800 flex items-center gap-1.5 nav-active">
+                    <i class="fa-solid fa-house text-xs"></i> <span>Beranda</span>
+                </button>
+                <button onclick="switchPage('materi')" id="nav-materi" class="nav-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:text-white hover:bg-slate-800 flex items-center gap-1.5 text-slate-400">
+                    <i class="fa-solid fa-graduation-cap text-xs"></i> <span>Materi</span>
+                </button>
+                <button onclick="switchPage('latihan')" id="nav-latihan" class="nav-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:text-white hover:bg-slate-800 flex items-center gap-1.5 text-slate-400">
+                    <i class="fa-solid fa-circle-question text-xs"></i> <span>Latihan</span>
+                </button>
+                <button onclick="switchPage('refleksi')" id="nav-refleksi" class="nav-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:text-white hover:bg-slate-800 flex items-center gap-1.5 text-slate-400">
+                    <i class="fa-solid fa-pen-fancy text-xs"></i> <span>Refleksi</span>
+                </button>
+                <button onclick="switchPage('pengembang')" id="nav-pengembang" class="nav-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:text-white hover:bg-slate-800 flex items-center gap-1.5 text-slate-400">
+                    <i class="fa-solid fa-user-tie text-xs"></i> <span>Pengembang</span>
+                </button>
+            </nav>
+
+            <!-- Fitur Tambahan (Audio & Fullscreen) -->
+            <div class="flex items-center gap-2">
+                <!-- Status Siswa Ringkas -->
+                <div id="student-badge" class="hidden bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 text-xs text-blue-300">
+                    <i class="fa-solid fa-user mr-1"></i> <span id="badge-name">Siswa</span>
+                </div>
+                <!-- Tombol Audio BGM -->
+                <button onclick="toggleAudio()" id="btn-audio" class="bg-slate-800 hover:bg-blue-900 text-slate-300 hover:text-white p-2.5 rounded-xl transition-all shadow border border-slate-700 flex items-center justify-center w-10 h-10" title="Nyalakan/Matikan Musik Latar">
+                    <i id="audio-icon" class="fa-solid fa-volume-xmark"></i>
+                </button>
+                <!-- Tombol Fullscreen -->
+                <button onclick="toggleFullScreen()" class="bg-slate-800 hover:bg-blue-900 text-slate-300 hover:text-white p-2.5 rounded-xl transition-all shadow border border-slate-700 flex items-center justify-center w-10 h-10" title="Layar Penuh">
+                    <i id="fullscreen-icon" class="fa-solid fa-expand"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 md:py-10 transition-all duration-500">
+        
+        <!-- ================= HALAMAN 1: BERANDA ================= -->
+        <section id="page-beranda" class="page-section block animate-fadeIn">
+            <!-- Jumbotron Selamat Datang -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-900/55 rounded-3xl p-6 md:p-12 border border-slate-800 shadow-2xl backdrop-blur">
+                <div class="lg:col-span-7 space-y-6">
+                    <!-- Logo Sekolah & Lencana Pembelajaran -->
+                    <div class="flex flex-wrap items-center gap-4">
+                        <div class="bg-slate-950/80 p-2 rounded-2xl border border-slate-800/80 shadow-md">
+                            <img src="https://imgur.com/v2UCNSm.PNG" alt="Logo Sekolah" class="h-14 w-auto object-contain rounded-xl" onerror="this.src='https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=100&q=80'">
+                        </div>
+                        <div class="inline-flex items-center gap-2 bg-blue-500/10 text-blue-400 px-4 py-2 rounded-full border border-blue-500/20 text-xs font-semibold uppercase tracking-wider">
+                            <i class="fa-solid fa-star"></i> Pembelajaran Literasi Digital
+                        </div>
+                    </div>
+
+                    <h2 class="text-3xl md:text-5xl font-black leading-tight text-white">
+                        Menemukan Makna <br/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Tersurat & Tersirat</span> <br/>
+                        dalam Cerita Pendek
+                    </h2>
+                    
+                    <div class="bg-slate-950/60 rounded-2xl p-4 border border-slate-800/80">
+                        <h4 class="text-sm font-bold text-blue-400 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-bullseye"></i> Tujuan Pembelajaran (SMP):
+                        </h4>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Peserta didik mampu menemukan, mengidentifikasi, dan membedakan makna <span class="text-blue-300 font-semibold">tersurat (tertulis jelas)</span> dan <span class="text-indigo-300 font-semibold">tersirat (tersembunyi/implisit)</span> di dalam cerita pendek yang dibaca secara kritis dan mandiri.
+                        </p>
+                    </div>
+
+                    <!-- Input Nama dan Data Diri Siswa (Wajib) -->
+                    <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <h3 class="text-md font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-id-card text-blue-500"></i> Lengkapi Data Dirimu Sebelum Belajar:
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Nama Lengkap</label>
+                                <input type="text" id="student-name" placeholder="Contoh: Budi Santoso" class="w-full bg-slate-900 border border-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-lg px-3 py-2 text-sm text-white outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Kelas</label>
+                                <input type="text" id="student-class" placeholder="Contoh: VIII-A" class="w-full bg-slate-900 border border-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-lg px-3 py-2 text-sm text-white outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Asal Sekolah</label>
+                                <input type="text" id="student-school" placeholder="Contoh: SMPN 1 Jakarta" class="w-full bg-slate-900 border border-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-lg px-3 py-2 text-sm text-white outline-none transition">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="startLearning()" class="group inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-8 py-4 rounded-xl shadow-lg shadow-blue-900/40 transition-all duration-300 transform hover:-translate-y-1">
+                        <span>Mulai Belajar Sekarang</span>
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform"></i>
+                    </button>
+                </div>
+                
+                <!-- Ilustrasi Sederhana -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative w-full max-w-sm">
+                        <!-- Decorative background glow -->
+                        <div class="absolute inset-0 bg-blue-500/20 rounded-full blur-3xl"></div>
+                        <!-- Virtual Book Illustration -->
+                        <div class="relative bg-gradient-to-br from-blue-950 to-slate-900 border border-slate-700/60 p-8 rounded-3xl shadow-2xl flex flex-col items-center text-center space-y-6">
+                            <div class="w-24 h-24 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-2xl flex items-center justify-center shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                                <i class="fa-solid fa-brain text-white text-4xl"></i>
+                            </div>
+                            <div>
+                                <span class="bg-indigo-500/10 text-indigo-400 text-xs px-3 py-1 rounded-full border border-indigo-500/20 font-bold uppercase">Membaca Aktif</span>
+                                <h3 class="text-xl font-bold text-white mt-3">Detektif Makna</h3>
+                                <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                                    Membaca bukan sekadar melihat baris tulisan. Jadilah detektif yang mampu menebak pesan rahasia sang penulis!
+                                </p>
+                            </div>
+                            <div class="w-full grid grid-cols-2 gap-2 text-xs text-slate-300 border-t border-slate-800 pt-4">
+                                <div class="bg-slate-950/60 p-2 rounded-lg">
+                                    <span class="text-blue-400 font-bold block">Tersurat</span>
+                                    <span>Pasti & Nyata</span>
+                                </div>
+                                <div class="bg-slate-950/60 p-2 rounded-lg">
+                                    <span class="text-indigo-400 font-bold block">Tersirat</span>
+                                    <span>Terselubung</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= HALAMAN 2: MATERI ================= -->
+        <section id="page-materi" class="page-section hidden animate-fadeIn">
+            <div class="space-y-8">
+                <!-- Header Materi -->
+                <div class="text-center max-w-2xl mx-auto space-y-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-blue-400">Pusat Belajar Literasi</span>
+                    <h2 class="text-2xl md:text-4xl font-extrabold text-white">Modul Pembelajaran Lengkap</h2>
+                    <p class="text-slate-400 text-sm">Pelajari konsep dasar, panduan praktis, dan uji pemahamanmu secara langsung.</p>
+                </div>
+
+                <!-- Navigasi Sub-Materi (Tabs) -->
+                <div class="flex flex-wrap justify-center gap-2 border-b border-slate-800 pb-4">
+                    <button onclick="switchMateriTab('definisi')" id="tab-mat-definisi" class="px-4 py-2 text-xs md:text-sm font-bold rounded-lg border border-slate-800 bg-blue-600 text-white transition-all">
+                        <i class="fa-solid fa-book-open mr-1"></i> 1. Definisi & Perbedaan
+                    </button>
+                    <button onclick="switchMateriTab('panduan')" id="tab-mat-panduan" class="px-4 py-2 text-xs md:text-sm font-bold rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:bg-slate-800 transition-all">
+                        <i class="fa-solid fa-magnifying-glass-chart mr-1"></i> 2. Panduan Detektif Makna
+                    </button>
+                    <button onclick="switchMateriTab('cerpen')" id="tab-mat-cerpen" class="px-4 py-2 text-xs md:text-sm font-bold rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:bg-slate-800 transition-all">
+                        <i class="fa-solid fa-comments mr-1"></i> 3. Analisis Cerpen Interaktif
+                    </button>
+                </div>
+
+                <!-- SUB-TAB 1: DEFINISI & PERBEDAAN -->
+                <div id="materi-definisi" class="materi-tab-content block space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Kartu Makna Tersurat -->
+                        <div class="bg-slate-900/80 border-l-4 border-blue-500 rounded-2xl p-6 shadow-xl space-y-4">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-blue-600 text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg shadow-md">A</span>
+                                <div>
+                                    <h3 class="text-lg font-bold text-white">Makna Tersurat (Eksplisit)</h3>
+                                    <p class="text-xs text-blue-400">Terbaca secara langsung oleh mata</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 leading-relaxed">
+                                Makna tersurat adalah arti atau informasi yang <span class="bg-blue-950 text-blue-200 px-1 rounded font-semibold border-b border-blue-500">ditulis secara jelas, gamblang, dan langsung</span> di dalam teks. Pembaca tidak perlu melakukan analisis mendalam atau menebak pesan di balik kalimat karena faktanya tertera langsung dalam rangkaian kata.
+                            </p>
+                            <ul class="text-xs text-slate-400 space-y-1 bg-slate-950 p-3 rounded-xl border border-slate-800">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-blue-400"></i> Informasi berupa fakta mentah (Nama tokoh, warna, tempat).</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-blue-400"></i> Tidak memerlukan penafsiran ganda.</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-blue-400"></i> Bersifat objektif sesuai teks asli.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Kartu Makna Tersirat -->
+                        <div class="bg-slate-900/80 border-l-4 border-indigo-500 rounded-2xl p-6 shadow-xl space-y-4">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-indigo-600 text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg shadow-md">B</span>
+                                <div>
+                                    <h3 class="text-lg font-bold text-white">Makna Tersirat (Implisit)</h3>
+                                    <p class="text-xs text-indigo-400">Tersembunyi di balik baris kata</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 leading-relaxed">
+                                Makna tersirat adalah pesan, maksud, atau perasaan yang <span class="bg-indigo-950 text-indigo-200 px-1 rounded font-semibold border-b border-indigo-500">disembunyikan oleh penulis</span>. Pembaca dituntut untuk aktif melakukan interpretasi, menghubungkan petunjuk fisik/dialog tokoh, serta menarik kesimpulan mandiri.
+                            </p>
+                            <ul class="text-xs text-slate-400 space-y-1 bg-slate-950 p-3 rounded-xl border border-slate-800">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-indigo-400"></i> Mengungkapkan emosi terdalam atau simbolisme kondisi tokoh.</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-indigo-400"></i> Memerlukan kemampuan bernalar logis secara kritis.</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-indigo-400"></i> Pesan tersembunyi yang ingin disampaikan secara halus.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Tabel Perbandingan Komprehensif -->
+                    <div class="bg-slate-900/40 rounded-3xl p-6 border border-slate-800 shadow-xl">
+                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-table text-blue-500"></i> Tabel Analisis Perbedaan Utama
+                        </h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm text-slate-300 border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-800 bg-slate-950 text-slate-400 text-xs uppercase">
+                                        <th class="p-3">Aspek Pembanding</th>
+                                        <th class="p-3 text-blue-400">Makna Tersurat</th>
+                                        <th class="p-3 text-indigo-400">Makna Tersirat</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800">
+                                    <tr>
+                                        <td class="p-3 font-semibold text-white">Keberadaan Teks</td>
+                                        <td class="p-3">Tertulis jelas di atas kertas kertas/layar.</td>
+                                        <td class="p-3">Tersembunyi di antara baris (harus disimpulkan).</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-semibold text-white">Cara Menemukan</td>
+                                        <td class="p-3">Membaca biasa / memindai secara langsung.</td>
+                                        <td class="p-3">Menghubungkan konteks cerita dan perilaku tokoh.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-semibold text-white">Sifat Pemahaman</td>
+                                        <td class="p-3">Langsung paham tanpa butuh imajinasi berlebih.</td>
+                                        <td class="p-3">Butuh empati, penalaran, dan pemahaman emosi.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-semibold text-white">Contoh Kalimat</td>
+                                        <td class="p-3">"Hari ini hujan turun deras sejak pagi hari."</td>
+                                        <td class="p-3">"Langit menumpahkan tangisnya tanpa henti sejak fajar."</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-TAB 2: PANDUAN DETEKTIF MAKNA -->
+                <div id="materi-panduan" class="materi-tab-content hidden space-y-6">
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 md:p-8 space-y-6">
+                        <div class="text-left border-b border-slate-800 pb-4">
+                            <span class="bg-yellow-500/10 text-yellow-400 text-xs px-2.5 py-1 rounded-full border border-yellow-500/20 font-bold uppercase">
+                                <i class="fa-solid fa-circle-info"></i> Strategi Membaca
+                            </span>
+                            <h3 class="text-xl font-bold text-white mt-1">4 Langkah Praktis Menemukan Makna Tersirat</h3>
+                            <p class="text-slate-400 text-xs mt-1">Gunakan panduan berikut untuk membedah makna terselubung dalam setiap cerpen yang kamu baca.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <!-- Langkah 1 -->
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-blue-500 text-xs font-bold block">LANGKAH 01</span>
+                                <h4 class="text-sm font-bold text-white">Perhatikan Reaksi Fisik Tokoh</h4>
+                                <p class="text-xs text-slate-400">Menggigit bibir, meremas tangan, muka memerah, menundukkan kepala. Bahasa tubuh menunjukkan perasaan asli tokoh.</p>
+                            </div>
+
+                            <!-- Langkah 2 -->
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-blue-500 text-xs font-bold block">LANGKAH 02</span>
+                                <h4 class="text-sm font-bold text-white">Analisis Latar Suasana</h4>
+                                <p class="text-xs text-slate-400">Guntur mengelegar, angin dingin merasuk tulang, malam gelap tanpa bintang. Latar sering kali menjadi simbol suasana hati tokoh.</p>
+                            </div>
+
+                            <!-- Langkah 3 -->
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-blue-500 text-xs font-bold block">LANGKAH 03</span>
+                                <h4 class="text-sm font-bold text-white">Hubungkan Pilihan Kata (Diksi)</h4>
+                                <p class="text-xs text-slate-400">Penulis sering kali memakai perumpamaan seperti "senyum pahit" untuk melukiskan perasaan kecewa yang mendalam.</p>
+                            </div>
+
+                            <!-- Langkah 4 -->
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-blue-500 text-xs font-bold block">LANGKAH 04</span>
+                                <h4 class="text-sm font-bold text-white">Amati Keberatan / Penolakan</h4>
+                                <p class="text-xs text-slate-400">Saat tokoh tidak menyentuh makanan, mengabaikan teh hangat, atau mengunci pintu, ada pesan psikologis di balik sikap tersebut.</p>
+                            </div>
+                        </div>
+
+                        <!-- Infografis Aturan Detektif Sederhana -->
+                        <div class="bg-blue-950/20 border border-blue-900/40 p-4 rounded-xl text-xs text-blue-300 space-y-1">
+                            <strong><i class="fa-solid fa-lightbulb"></i> Rumus Detektif Sastra:</strong> <br/>
+                            <span class="text-white font-mono">Makna Tersurat (Kenyataan Fisik) + Analisis Konteks Sosial/Emosi = Makna Tersirat (Pesan Tersembunyi)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-TAB 3: ANALISIS CERPEN INTERAKTIF -->
+                <div id="materi-cerpen" class="materi-tab-content hidden space-y-6">
+                    <!-- Bagian Interaktif: Membaca Cerpen Contoh -->
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 md:p-8 space-y-6">
+                        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                            <div>
+                                <span class="bg-green-500/10 text-green-400 text-xs px-2.5 py-1 rounded-full border border-green-500/20 font-bold uppercase">
+                                    <i class="fa-solid fa-book-open"></i> Cerpen Contoh
+                                </span>
+                                <h3 class="text-xl font-bold text-white mt-1">Petualangan di Balik Mendung</h3>
+                            </div>
+                            <p class="text-xs text-slate-400 italic">
+                                💡 Instruksi: <strong>Klik bagian teks yang di-highlight berwarna</strong> untuk membedah analisis makna secara interaktif!
+                            </p>
+                        </div>
+
+                        <!-- Area Teks Cerpen -->
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <!-- Kolom Cerpen -->
+                            <div class="lg:col-span-8 bg-slate-950 p-6 rounded-2xl border border-slate-800/80 leading-relaxed text-sm text-slate-300 space-y-4 select-none">
+                                <p>
+                                    Sore itu, <span onclick="showInteractiveMeaning('sore', this)" class="cursor-pointer bg-blue-900/40 text-blue-300 hover:bg-blue-800/70 border-b-2 border-dashed border-blue-400 px-1 py-0.5 rounded font-medium transition-colors">langit di atas desa Sukamaju tampak hitam pekat</span> bagai ditutupi selembar kain beledu raksasa. Angin bertiup kencang hingga membuat ranting-ranting pohon mangga di halaman rumah Adi berderit keras.
+                                </p>
+                                <p>
+                                    Adi duduk bersandar di kursi bambu teras rumahnya sambil <span onclick="showInteractiveMeaning('gundah', this)" class="cursor-pointer bg-amber-900/40 text-amber-300 hover:bg-amber-800/70 border-b-2 border-dashed border-amber-400 px-1 py-0.5 rounded font-medium transition-colors">terus memandangi arloji di tangan kirinya</span>. Sesekali ia meremas ujung bajunya yang basah oleh keringat dingin. Di sampingnya, terdapat sebuah <span onclick="showInteractiveMeaning('sepeda', this)" class="cursor-pointer bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/70 border-b-2 border-dashed border-emerald-400 px-1 py-0.5 rounded font-medium transition-colors">sepeda gunung beroda besar yang rantainya telah putus</span>.
+                                </p>
+                                <p>
+                                    Tiba-tiba ibunya keluar membawa segelas teh hangat. "Minumlah dulu, Adi. Besok pagi bengkel Pak Joko pasti sudah buka," kata Ibu dengan <span onclick="showInteractiveMeaning('suara_lembut', this)" class="cursor-pointer bg-sky-900/40 text-sky-300 hover:bg-sky-800/70 border-b-2 border-dashed border-sky-400 px-1 py-0.5 rounded font-medium transition-colors">suara lembut yang menenangkan</span>. Adi hanya mengangguk pelan, namun ia <span onclick="showInteractiveMeaning('teh', this)" class="cursor-pointer bg-purple-900/40 text-purple-300 hover:bg-purple-800/70 border-b-2 border-dashed border-purple-400 px-1 py-0.5 rounded font-medium transition-colors">sama sekali tidak menyentuh teh hangat itu</span>. Pandangan matanya lurus menatap ke jalan raya yang kian sepi.
+                                </p>
+                            </div>
+
+                            <!-- Kolom Analisis Makna Interaktif (Muncul saat klik) -->
+                            <div class="lg:col-span-4 flex flex-col justify-between bg-slate-900 p-6 rounded-2xl border border-slate-800">
+                                <div class="space-y-4">
+                                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                                        <i class="fa-solid fa-magnifying-glass text-blue-400"></i> Detektor Analisis Makna
+                                    </h4>
+                                    
+                                    <div id="analysis-placeholder" class="text-center py-10 space-y-3">
+                                        <i class="fa-solid fa-hand-pointer text-slate-600 text-4xl animate-bounce"></i>
+                                        <p class="text-xs text-slate-400">Silakan klik salah satu teks berwarna di sebelah kiri untuk melihat analisis makna tersurat dan tersirat!</p>
+                                    </div>
+
+                                    <div id="analysis-box" class="hidden space-y-4">
+                                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+                                            <span class="text-slate-500 text-[10px] uppercase font-bold">Kutipan Cerpen</span>
+                                            <p id="analysis-quote" class="text-xs font-semibold text-white italic mt-1"></p>
+                                        </div>
+
+                                        <div class="space-y-3">
+                                            <div class="bg-blue-950/40 p-3 rounded-lg border border-blue-900/40">
+                                                <span class="text-blue-400 text-xs font-bold block mb-1">
+                                                    <i class="fa-solid fa-eye"></i> Arti Tersurat (Nyata)
+                                                </span>
+                                                <p id="analysis-explicit" class="text-xs text-slate-300"></p>
+                                            </div>
+
+                                            <div class="bg-indigo-950/40 p-3 rounded-lg border border-indigo-900/40">
+                                                <span class="text-indigo-400 text-xs font-bold block mb-1">
+                                                    <i class="fa-solid fa-brain"></i> Arti Tersirat (Tersembunyi)
+                                                </span>
+                                                <p id="analysis-implicit" class="text-xs text-slate-300"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 pt-4 border-t border-slate-800 text-[11px] text-slate-400">
+                                    <i class="fa-solid fa-lightbulb text-yellow-500 mr-1"></i> Dengan berlatih menganalisis seperti ini, kamu sedang melatih kepekaan literasimu secara nyata!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigasi ke latihan -->
+                <div class="text-center pt-4">
+                    <button onclick="switchPage('latihan')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3 rounded-xl shadow-md transition transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Lanjut ke Latihan Interaktif
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= HALAMAN 3: LATIHAN INTERAKTIF ================= -->
+        <section id="page-latihan" class="page-section hidden animate-fadeIn">
+            <div class="space-y-8">
+                <!-- Header Latihan -->
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-question text-blue-500"></i> Uji Kemampuan Literasimu!
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Selesaikan 3 tipe permainan latihan di bawah ini untuk menguji pemahamanmu.</p>
+                    </div>
+                    <!-- Progress Bar Sederhana -->
+                    <div class="w-full md:w-64 bg-slate-950 p-3 rounded-xl border border-slate-800">
+                        <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                            <span>Progres Latihan</span>
+                            <span id="score-text">Diselesaikan: 0/3</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-blue-500 to-emerald-500 w-0 transition-all duration-500"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB CONTAINER LATIHAN -->
+                <div class="bg-slate-900/40 rounded-3xl p-6 border border-slate-800">
+                    <!-- Navigasi sub-latihan -->
+                    <div class="flex flex-wrap gap-2 mb-6 border-b border-slate-800 pb-4">
+                        <button onclick="switchExerciseTab('bs')" id="tab-ex-bs" class="px-4 py-2 text-xs font-bold rounded-lg bg-blue-600 text-white transition">
+                            1. Benar / Salah
+                        </button>
+                        <button onclick="switchExerciseTab('matching')" id="tab-ex-matching" class="px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition">
+                            2. Mencocokkan Kutipan
+                        </button>
+                        <button onclick="switchExerciseTab('dragdrop')" id="tab-ex-dragdrop" class="px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition">
+                            3. Seret & Letakkan (Drag & Drop)
+                        </button>
+                    </div>
+
+                    <!-- ============ SUB-LATIHAN A: BENAR - SALAH ============ -->
+                    <div id="ex-content-bs" class="exercise-tab-content block space-y-6">
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/60 mb-4">
+                            <p class="text-xs text-slate-400 font-bold mb-1 uppercase tracking-wide">Dasar Cerpen Latihan:</p>
+                            <p class="text-sm italic text-slate-300">"Wajah Pak Arman memerah padam melihat tumpukan sampah plastik menyumbat saluran air di depan gerbang rumahnya."</p>
+                        </div>
+
+                        <!-- Daftar Pernyataan -->
+                        <div class="space-y-4">
+                            <!-- Soal 1 -->
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div class="space-y-1">
+                                    <span class="text-[10px] font-bold text-blue-400 uppercase">Pernyataan 1</span>
+                                    <p class="text-sm text-white">Makna tersurat dari kutipan tersebut adalah ada tumpukan sampah plastik di selokan depan rumah Pak Arman.</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="checkTrueFalse(1, true, this)" class="bg-slate-800 hover:bg-emerald-900/50 px-4 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-emerald-400 border border-slate-700 transition flex items-center gap-1">
+                                        <i class="fa-solid fa-check"></i> Benar
+                                    </button>
+                                    <button onclick="checkTrueFalse(1, false, this)" class="bg-slate-800 hover:bg-rose-900/50 px-4 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-rose-400 border border-slate-700 transition flex items-center gap-1">
+                                        <i class="fa-solid fa-xmark"></i> Salah
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Feedback Soal 1 -->
+                            <div id="tf-feedback-1" class="hidden text-xs p-3 rounded-lg border"></div>
+
+                            <!-- Soal 2 -->
+                            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div class="space-y-1">
+                                    <span class="text-[10px] font-bold text-blue-400 uppercase">Pernyataan 2</span>
+                                    <p class="text-sm text-white">"Wajah Pak Arman memerah padam" memiliki makna tersirat bahwa Pak Arman sedang merasa gembira menyambut hujan.</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="checkTrueFalse(2, true, this)" class="bg-slate-800 hover:bg-emerald-900/50 px-4 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-emerald-400 border border-slate-700 transition flex items-center gap-1">
+                                        <i class="fa-solid fa-check"></i> Benar
+                                    </button>
+                                    <button onclick="checkTrueFalse(2, false, this)" class="bg-slate-800 hover:bg-rose-900/50 px-4 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-rose-400 border border-slate-700 transition flex items-center gap-1">
+                                        <i class="fa-solid fa-xmark"></i> Salah
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Feedback Soal 2 -->
+                            <div id="tf-feedback-2" class="hidden text-xs p-3 rounded-lg border"></div>
+                        </div>
+                    </div>
+
+                    <!-- ============ SUB-LATIHAN B: MENCOCOKKAN ============ -->
+                    <div id="ex-content-matching" class="exercise-tab-content hidden space-y-6">
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/60 text-xs">
+                            💡 <strong>Cara Bermain:</strong> Klik satu kotak di kolom kiri (Kutipan Cerpen), kemudian klik kotak pasangannya yang sesuai di kolom kanan (Tipe Makna).
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
+                            <!-- Kolom Kiri: Kutipan -->
+                            <div class="space-y-3">
+                                <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-2 text-center">Kolom Kutipan Cerpen</h4>
+                                
+                                <div id="match-q1" onclick="selectMatch('left', 'q1')" class="match-card bg-slate-900 border border-slate-800 hover:border-blue-500 p-4 rounded-xl text-xs text-slate-200 cursor-pointer transition select-none">
+                                    "Ibu membawa payung cadangan di tas jinjingnya." &rarr; <strong>Ada payung di dalam tas ibu.</strong>
+                                </div>
+
+                                <div id="match-q2" onclick="selectMatch('left', 'q2')" class="match-card bg-slate-900 border border-slate-800 hover:border-blue-500 p-4 rounded-xl text-xs text-slate-200 cursor-pointer transition select-none">
+                                    "Dika membuang muka saat berpapasan dengan kakaknya di jalan." &rarr; <strong>Dika sedang kesal/marah pada kakaknya.</strong>
+                                </div>
+
+                                <div id="match-q3" onclick="selectMatch('left', 'q3')" class="match-card bg-slate-900 border border-slate-800 hover:border-blue-500 p-4 rounded-xl text-xs text-slate-200 cursor-pointer transition select-none">
+                                    "Matahari bersinar terik membakar kulit para petani garam." &rarr; <strong>Keadaan cuaca siang itu sangat panas.</strong>
+                                </div>
+                            </div>
+
+                            <!-- Kolom Kanan: Kategori Makna -->
+                            <div class="space-y-3">
+                                <h4 class="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-2 text-center">Kolom Jenis Makna</h4>
+                                
+                                <div id="match-a1" onclick="selectMatch('right', 'a1')" class="match-card bg-slate-900 border border-slate-800 hover:border-indigo-500 p-4 rounded-xl text-xs text-slate-200 cursor-pointer transition select-none flex justify-between items-center">
+                                    <span>Makna Tersurat (Fakta Nyata Cuaca)</span>
+                                    <span class="text-[10px] bg-blue-500/15 text-blue-400 px-2 py-0.5 rounded">Opsi A</span>
+                                </div>
+
+                                <div id="match-a2" onclick="selectMatch('right', 'a2')" class="match-card bg-slate-900 border border-slate-800 hover:border-indigo-500 p-4 rounded-xl text-xs text-slate-200 cursor-pointer transition select-none flex justify-between items-center">
+                                    <span>Makna Tersurat (Fakta Keberadaan Payung)</span>
+                                    <span class="text-[10px] bg-blue-500/15 text-blue-400 px-2 py-0.5 rounded">Opsi B</span>
+                                </div>
+
+                                <div id="match-a3" onclick="selectMatch('right', 'a3')" class="match-card bg-slate-900 border border-slate-800 hover:border-indigo-500 p-4 rounded-xl text-xs text-slate-200 cursor-pointer transition select-none flex justify-between items-center">
+                                    <span>Makna Tersirat (Interpretasi Sikap Tokoh)</span>
+                                    <span class="text-[10px] bg-indigo-500/15 text-indigo-400 px-2 py-0.5 rounded">Opsi C</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feedback Pencocokan -->
+                        <div id="matching-feedback" class="hidden text-xs text-center p-3 rounded-lg bg-emerald-950/40 border border-emerald-900/40 text-emerald-400 font-bold">
+                            Selamat! Semua pasangan berhasil dicocokkan dengan benar.
+                        </div>
+                    </div>
+
+                    <!-- ============ SUB-LATIHAN C: DRAG AND DROP ============ -->
+                    <div id="ex-content-dragdrop" class="exercise-tab-content hidden space-y-6">
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/60 text-xs">
+                            💡 <strong>Cara Bermain:</strong> Seret (drag) setiap kotak kalimat kutipan di bawah ini lalu lepaskan (drop) ke keranjang kategori yang tepat (Makna Tersurat / Makna Tersirat). 
+                            <span class="text-blue-400 block mt-1">*(Untuk pengguna HP, silakan klik kutipan terlebih dahulu lalu klik keranjang tujuannya).*</span>
+                        </div>
+
+                        <!-- Items to Drag -->
+                        <div id="drag-items-container" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div draggable="true" ondragstart="drag(event)" id="drag1" class="drag-item bg-slate-800 hover:bg-slate-750 border border-slate-700 p-3.5 rounded-xl text-xs text-white shadow-inner flex items-center gap-2 select-none">
+                                <i class="fa-solid fa-grip-vertical text-slate-500"></i>
+                                <span>"Dina memakai sepatu hitam baru ke sekolah." (Siswa memakai alas kaki sekolah)</span>
+                            </div>
+
+                            <div draggable="true" ondragstart="drag(event)" id="drag2" class="drag-item bg-slate-800 hover:bg-slate-750 border border-slate-700 p-3.5 rounded-xl text-xs text-white shadow-inner flex items-center gap-2 select-none">
+                                <i class="fa-solid fa-grip-vertical text-slate-500"></i>
+                                <span>"Senyumnya pahit saat melihat nilai rapor itu." (Tokoh merasa sangat kecewa)</span>
+                            </div>
+
+                            <div draggable="true" ondragstart="drag(event)" id="drag3" class="drag-item bg-slate-800 hover:bg-slate-750 border border-slate-700 p-3.5 rounded-xl text-xs text-white shadow-inner flex items-center gap-2 select-none">
+                                <i class="fa-solid fa-grip-vertical text-slate-500"></i>
+                                <span>"Ayam jago berkokok bersahutan di pagi hari." (Suara alam menyambut fajar menyingsing)</span>
+                            </div>
+
+                            <div draggable="true" ondragstart="drag(event)" id="drag4" class="drag-item bg-slate-800 hover:bg-slate-750 border border-slate-700 p-3.5 rounded-xl text-xs text-white shadow-inner flex items-center gap-2 select-none">
+                                <i class="fa-solid fa-grip-vertical text-slate-500"></i>
+                                <span>"Randi mengunci kamarnya rapat-rapat sepanjang hari." (Randi ingin menyendiri/sedang sedih)</span>
+                            </div>
+                        </div>
+
+                        <!-- Drop Targets -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                            <!-- Kategori Tersurat -->
+                            <div id="zone-explicit" ondrop="drop(event, 'tersurat')" ondragover="allowDrop(event)" ondragenter="dragEnter(this)" ondragleave="dragLeave(this)" onclick="clickDrop('tersurat')" class="drop-zone border-2 border-dashed border-slate-700 rounded-2xl p-6 text-center space-y-4 bg-slate-900/30 transition-all cursor-pointer">
+                                <div class="w-12 h-12 bg-blue-500/15 text-blue-400 rounded-full flex items-center justify-center mx-auto text-lg">
+                                    <i class="fa-solid fa-eye"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Keranjang Makna Tersurat</h4>
+                                    <p class="text-[11px] text-slate-400">Lepaskan kutipan yang maknanya sesuai fakta tertulis</p>
+                                </div>
+                                <div id="dropped-explicit" class="space-y-2 text-xs text-left min-h-[50px]">
+                                    <!-- Terisi saat didrop -->
+                                </div>
+                            </div>
+
+                            <!-- Kategori Tersirat -->
+                            <div id="zone-implicit" ondrop="drop(event, 'tersirat')" ondragover="allowDrop(event)" ondragenter="dragEnter(this)" ondragleave="dragLeave(this)" onclick="clickDrop('tersirat')" class="drop-zone border-2 border-dashed border-slate-700 rounded-2xl p-6 text-center space-y-4 bg-slate-900/30 transition-all cursor-pointer">
+                                <div class="w-12 h-12 bg-indigo-500/15 text-indigo-400 rounded-full flex items-center justify-center mx-auto text-lg">
+                                    <i class="fa-solid fa-brain"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Keranjang Makna Tersirat</h4>
+                                    <p class="text-[11px] text-slate-400">Lepaskan kutipan yang membutuhkan interpretasi perasaan/situasi</p>
+                                </div>
+                                <div id="dropped-implicit" class="space-y-2 text-xs text-left min-h-[50px]">
+                                    <!-- Terisi saat didrop -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= HALAMAN 4: REFLEKSI ================= -->
+        <section id="page-refleksi" class="page-section hidden animate-fadeIn">
+            <div class="max-w-3xl mx-auto space-y-8">
+                <!-- Header Refleksi -->
+                <div class="text-center space-y-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-purple-400">Evaluasi Mandiri</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white">Refleksi Belajarku</h2>
+                    <p class="text-slate-400 text-sm">Tuliskan pemahamanmu untuk memantapkan pengetahuan yang telah didapatkan.</p>
+                </div>
+
+                <!-- Formulir Refleksi -->
+                <div class="bg-slate-900 p-6 md:p-8 rounded-3xl border border-slate-800 shadow-2xl space-y-6">
+                    <!-- Pertanyaan 1 -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-slate-200">
+                            1. Apa saja hal baru yang kamu pelajari setelah membaca materi dan mencoba latihan tadi?
+                        </label>
+                        <textarea id="ref-q1" rows="3" placeholder="Tuliskan pendapatmu di sini..." class="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl p-4 text-sm text-white outline-none transition"></textarea>
+                    </div>
+
+                    <!-- Pertanyaan 2 -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-slate-200">
+                            2. Tuliskan dengan bahasamu sendiri perbedaan utama antara makna tersurat dan makna tersirat dalam cerpen!
+                        </label>
+                        <textarea id="ref-q2" rows="3" placeholder="Contoh: Tersurat adalah hal nyata, sedangkan tersirat adalah..." class="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl p-4 text-sm text-white outline-none transition"></textarea>
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-850">
+                        <span class="text-xs text-slate-400">
+                            <i class="fa-solid fa-cloud-arrow-up mr-1 text-blue-500"></i> Jawabanmu akan disimpan secara otomatis di browser ini.
+                        </span>
+                        <div class="flex gap-2 w-full sm:w-auto">
+                            <button onclick="clearRefleksi()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-750 text-slate-300 font-bold px-5 py-2.5 rounded-xl text-xs transition">
+                                <i class="fa-solid fa-eraser mr-1"></i> Bersihkan
+                            </button>
+                            <button onclick="saveRefleksi()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition shadow-md flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-floppy-disk"></i> Simpan Jawaban
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toast Notification Sederhana -->
+                <div id="toast" class="hidden fixed bottom-6 right-6 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2 text-xs border border-emerald-500 animate-pulse">
+                    <i class="fa-solid fa-circle-check text-sm"></i> <span id="toast-text">Berhasil disimpan!</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= HALAMAN 5: PENGEMBANG ================= -->
+        <section id="page-pengembang" class="page-section hidden animate-fadeIn">
+            <div class="max-w-2xl mx-auto bg-gradient-to-br from-slate-900 to-slate-950 rounded-3xl p-8 border border-slate-800 shadow-2xl text-center space-y-6">
+                <!-- Avatar Placeholder -->
+                <div class="relative w-32 h-32 mx-auto">
+                    <div class="absolute inset-0 bg-blue-500 rounded-full blur-xl opacity-30 animate-pulse"></div>
+                    <div class="relative w-32 h-32 rounded-full border-4 border-blue-500/30 overflow-hidden bg-slate-850 flex items-center justify-center">
+                        <!-- Menggunakan icon representasi guru/pengembang -->
+                        <i class="fa-solid fa-user-tie text-slate-400 text-6xl"></i>
+                    </div>
+                </div>
+
+                <!-- Bio Informasi -->
+                <div class="space-y-2">
+                    <h3 class="text-2xl font-black text-white">Wulan Widari Endah</h3>
+                    <p class="text-sm text-blue-400 font-semibold tracking-wide uppercase">Pengembang Media Pembelajaran Literasi</p>
+                    <div class="w-16 h-1 bg-blue-500 mx-auto rounded-full my-4"></div>
+                </div>
+
+                <p class="text-slate-300 text-sm leading-relaxed max-w-md mx-auto">
+                    Aplikasi ini dirancang khusus untuk membantu adik-adik tingkat Sekolah Menengah Pertama (SMP) agar dapat mengidentifikasi makna implisit dan eksplisit dalam fiksi secara menyenangkan serta melatih kemampuan membaca kritis.
+                </p>
+
+                <!-- Kontak / Info Tambahan -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 text-xs text-slate-400 max-w-sm mx-auto">
+                    <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                        <i class="fa-solid fa-envelope text-blue-400 block mb-1 text-sm"></i>
+                        <span>wulanwidariendah@gmail.com</span>
+                    </div>
+                    <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                        <i class="fa-solid fa-graduation-cap text-indigo-400 block mb-1 text-sm"></i>
+                        <span>Pendidikan Bahasa Indonesia</span>
+                    </div>
+                </div>
+
+                <!-- Footer Pengembang -->
+                <p class="text-[10px] text-slate-500 pt-4">
+                    SastraPintar Versi 1.0 &copy; 2026. Hak Cipta Dilindungi.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER STATUS & SCOREBOARD -->
+    <footer class="bg-slate-950 border-t border-slate-900 py-4 px-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>SastraPintar - Belajar Makna Tersurat & Tersirat dengan Cepat dan Mudah.</p>
+            <p class="text-[11px] text-slate-400">Dirancang khusus untuk kurikulum Literasi Indonesia SMP.</p>
+        </div>
+    </footer>
+
+    <!-- LOGIKA JAVASCRIPT UTAMA -->
+    <script>
+        // --- DATA STATE APLIKASI ---
+        const appState = {
+            studentName: '',
+            studentClass: '',
+            studentSchool: '',
+            scoreProgress: {
+                trueFalse: false,
+                matching: false,
+                dragDrop: false
+            },
+            audioCtx: null,
+            bgmNode: null,
+            audioPlaying: false,
+            selectedDragItem: null, // Untuk pendukung klik drop di HP
+            selectedLeftMatch: null // Untuk pendukung klik pencocokan
+        };
+
+        // --- SISTEM PEMBANGKIT EFEK SUARA & MUSIK (WEB AUDIO API) ---
+        function initAudio() {
+            if (!appState.audioCtx) {
+                appState.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // 1. Memutar BGM Sintetis Menenangkan
+        function playBGM() {
+            initAudio();
+            if (appState.audioPlaying) return;
+
+            const ctx = appState.audioCtx;
+            const osc1 = ctx.createOscillator();
+            const osc2 = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+
+            osc1.type = 'sine';
+            osc2.type = 'triangle';
+
+            osc1.frequency.setValueAtTime(220, ctx.currentTime); // A3
+            osc2.frequency.setValueAtTime(165, ctx.currentTime); // E3
+
+            gainNode.gain.setValueAtTime(0.02, ctx.currentTime); // Volume sangat rendah
+
+            osc1.connect(gainNode);
+            osc2.connect(gainNode);
+            gainNode.connect(ctx.destination);
+
+            osc1.start();
+            osc2.start();
+
+            let step = 0;
+            const notes = [220, 261.63, 293.66, 329.63, 392.00, 440]; 
+            const intervalId = setInterval(() => {
+                if (!appState.audioPlaying) {
+                    clearInterval(intervalId);
+                    try {
+                        osc1.stop();
+                        osc2.stop();
+                    } catch (e) {}
+                    return;
+                }
+                const baseFreq = notes[step % notes.length];
+                osc1.frequency.setValueAtTime(baseFreq, ctx.currentTime);
+                osc2.frequency.setValueAtTime(baseFreq * 1.5, ctx.currentTime);
+                step++;
+            }, 1500);
+
+            appState.bgmNode = { osc1, osc2, gainNode, intervalId };
+            appState.audioPlaying = true;
+            document.getElementById('audio-icon').className = "fa-solid fa-volume-high text-blue-400";
+        }
+
+        function stopBGM() {
+            if (appState.bgmNode) {
+                clearInterval(appState.bgmNode.intervalId);
+                try {
+                    appState.bgmNode.osc1.stop();
+                    appState.bgmNode.osc2.stop();
+                } catch(e){}
+                appState.bgmNode = null;
+            }
+            appState.audioPlaying = false;
+            document.getElementById('audio-icon').className = "fa-solid fa-volume-xmark";
+        }
+
+        function toggleAudio() {
+            playSFX('click');
+            if (appState.audioPlaying) {
+                stopBGM();
+            } else {
+                playBGM();
+            }
+        }
+
+        // 2. Efek Suara (SFX) Sintetis instan
+        function playSFX(type) {
+            try {
+                initAudio();
+                const ctx = appState.audioCtx;
+                if (!ctx) return;
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.1);
+                } 
+                else if (type === 'success') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, ctx.currentTime);
+                    osc.frequency.setValueAtTime(554.37, ctx.currentTime + 0.08);
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.16);
+                    osc.frequency.setValueAtTime(880, ctx.currentTime + 0.24);
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.4);
+                } 
+                else if (type === 'fail') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, ctx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.25);
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.25);
+                }
+                else if (type === 'drop') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(300, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.15);
+                }
+            } catch (error) {}
+        }
+
+
+        // --- MANAJEMEN HALAMAN ---
+        function switchPage(pageId) {
+            playSFX('click');
+            
+            document.querySelectorAll('.page-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+            }
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('nav-active');
+                btn.classList.add('text-slate-400');
+            });
+            const activeNav = document.getElementById(`nav-${pageId}`);
+            if (activeNav) {
+                activeNav.classList.add('nav-active');
+                activeNav.classList.remove('text-slate-400');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Dipanggil dari tombol "Mulai Belajar" di Beranda
+        function startLearning() {
+            const nameInput = document.getElementById('student-name').value.trim();
+            const classInput = document.getElementById('student-class').value.trim();
+            const schoolInput = document.getElementById('student-school').value.trim();
+
+            if (!nameInput) {
+                alert("Harap masukkan nama lengkap Anda terlebih dahulu!");
+                return;
+            }
+
+            appState.studentName = nameInput;
+            appState.studentClass = classInput || 'VIII';
+            appState.studentSchool = schoolInput || 'SMP';
+
+            document.getElementById('badge-name').innerText = appState.studentName;
+            document.getElementById('student-badge').classList.remove('hidden');
+
+            setTimeout(() => {
+                playBGM();
+            }, 500);
+
+            switchPage('materi');
+        }
+
+
+        // --- MANAJEMEN TAB MATERI ---
+        function switchMateriTab(tabId) {
+            playSFX('click');
+            
+            // Sembunyikan semua sub-konten materi
+            document.querySelectorAll('.materi-tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // Reset semua style tombol tab materi
+            document.querySelectorAll('[id^="tab-mat-"]').forEach(btn => {
+                btn.className = "px-4 py-2 text-xs md:text-sm font-bold rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:bg-slate-800 transition-all";
+            });
+
+            // Tampilkan sub-konten materi yang dipilih
+            document.getElementById(`materi-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-mat-${tabId}`).className = "px-4 py-2 text-xs md:text-sm font-bold rounded-lg border border-blue-500 bg-blue-600 text-white transition-all";
+        }
+
+
+        // --- MATERI INTERAKTIF ---
+        const interactiveData = {
+            sore: {
+                quote: "Sore itu, langit di atas desa Sukamaju tampak hitam pekat bagai ditutupi selembar kain beledu raksasa.",
+                explicit: "Cuaca sore hari di Desa Sukamaju sangat mendung karena awan berwarna hitam pekat.",
+                implicit: "Suasana digambarkan mencekam, suram, penuh hambatan, atau akan segera turun badai masalah besar."
+            },
+            gundah: {
+                quote: "...terus memandangi arloji di tangan kirinya. Sesekali ia meremas ujung bajunya yang basah oleh keringat dingin.",
+                explicit: "Adi sedang mengecek waktu di jam tangannya dan tangannya berkeringat dingin sampai meremas bajunya.",
+                implicit: "Adi sedang didera kecemasan, ketakutan, panik, dan tidak sabar menunggu kejelasan nasib rencananya."
+            },
+            sepeda: {
+                quote: "Di sampingnya, terdapat sebuah sepeda gunung beroda besar yang rantainya telah putus.",
+                explicit: "Ada sepeda gunung beroda besar yang kondisinya rusak karena rantainya terputus.",
+                implicit: "Penyebab kegundahan Adi berhubungan dengan rusaknya alat transportasi utama, melambangkan impiannya terhenti tiba-tiba."
+            },
+            suara_lembut: {
+                quote: "...suara lembut yang menenangkan.",
+                explicit: "Ibu berbicara menggunakan intonasi suara yang halus, rendah, dan perlahan.",
+                implicit: "Kasih sayang dan kehangatan seorang ibu yang selalu berusaha menjadi penenang batin dan memberikan dukungan emosional dalam situasi sulit."
+            },
+            teh: {
+                quote: "...sama sekali tidak menyentuh teh hangat itu.",
+                explicit: "Adi mendiamkan teh hangat buatan ibunya dan tidak meminumnya.",
+                implicit: "Adi kehilangan selera makan/minum karena pikirannya terlampau kalut oleh rasa khawatir yang menguasai dirinya."
+            }
+        };
+
+        function showInteractiveMeaning(key, element) {
+            playSFX('click');
+            
+            document.querySelectorAll('[onclick^="showInteractiveMeaning"]').forEach(el => {
+                el.classList.remove('ring-4', 'ring-blue-500/50');
+            });
+            element.classList.add('ring-4', 'ring-blue-500/50');
+
+            const data = interactiveData[key];
+            if (data) {
+                document.getElementById('analysis-placeholder').classList.add('hidden');
+                document.getElementById('analysis-box').classList.remove('hidden');
+
+                document.getElementById('analysis-quote').innerText = data.quote;
+                document.getElementById('analysis-explicit').innerText = data.explicit;
+                document.getElementById('analysis-implicit').innerText = data.implicit;
+            }
+        }
+
+
+        // --- LOGIKA PROGRESS LATIHAN ---
+        function updateProgress() {
+            let solvedCount = 0;
+            if (appState.scoreProgress.trueFalse) solvedCount++;
+            if (appState.scoreProgress.matching) solvedCount++;
+            if (appState.scoreProgress.dragDrop) solvedCount++;
+
+            document.getElementById('score-text').innerText = `Diselesaikan: ${solvedCount}/3`;
+            const fillWidth = (solvedCount / 3) * 100;
+            document.getElementById('progress-bar-fill').style.width = `${fillWidth}%`;
+        }
+
+        function switchExerciseTab(tabId) {
+            playSFX('click');
+            
+            document.querySelectorAll('.exercise-tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.querySelectorAll('[id^="tab-ex-"]').forEach(btn => {
+                btn.className = "px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-750 transition";
+            });
+
+            document.getElementById(`ex-content-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-ex-${tabId}`).className = "px-4 py-2 text-xs font-bold rounded-lg bg-blue-600 text-white transition";
+        }
+
+
+        // --- LATIHAN A: BENAR / SALAH ---
+        const tfAnswers = {
+            1: {
+                correct: true,
+                explanation: "Tepat sekali! Secara tertulis jelas (tersurat) bahwa ada tumpukan sampah plastik yang menyumbat air di selokan depan rumah Pak Arman."
+            },
+            2: {
+                correct: false,
+                explanation: "Tepat! 'Wajah memerah padam' merupakan ungkapan tersirat yang melambangkan kemarahan yang mendalam, bukan kegembiraan."
+            }
+        };
+
+        function checkTrueFalse(questionId, answer, element) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('button').forEach(btn => {
+                btn.className = btn.className.replace(/bg-green-600|bg-red-600/g, 'bg-slate-800');
+            });
+
+            const feedbackElement = document.getElementById(`tf-feedback-${questionId}`);
+            feedbackElement.classList.remove('hidden');
+
+            const isCorrect = tfAnswers[questionId].correct === answer;
+
+            if (isCorrect) {
+                playSFX('success');
+                element.classList.add('bg-green-600');
+                feedbackElement.className = "text-xs p-3 rounded-lg border border-emerald-900 bg-emerald-950/40 text-emerald-400 font-medium block mt-2";
+                feedbackElement.innerHTML = `<i class="fa-solid fa-circle-check"></i> ... Benar! ${tfAnswers[questionId].explanation}`;
+            } else {
+                playSFX('fail');
+                element.classList.add('bg-red-600');
+                feedbackElement.className = "text-xs p-3 rounded-lg border border-rose-900 bg-rose-950/40 text-rose-400 font-medium block mt-2";
+                feedbackElement.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Salah. Coba pelajari maknanya lagi, ya!`;
+            }
+
+            const fb1 = document.getElementById('tf-feedback-1');
+            const fb2 = document.getElementById('tf-feedback-2');
+            if (fb1.innerHTML.includes('Benar!') && fb2.innerHTML.includes('Benar!')) {
+                appState.scoreProgress.trueFalse = true;
+                updateProgress();
+            }
+        }
+
+
+        // --- LATIHAN B: MENCOCOKKAN ---
+        const correctMatches = {
+            'q1': 'a2', 
+            'q2': 'a3', 
+            'q3': 'a1'  
+        };
+        const activeMatches = {}; 
+
+        function selectMatch(side, id) {
+            playSFX('click');
+
+            if (side === 'left') {
+                if (appState.selectedLeftMatch) {
+                    document.getElementById(`match-${appState.selectedLeftMatch}`).classList.remove('ring-4', 'ring-blue-500');
+                }
+                appState.selectedLeftMatch = id;
+                document.getElementById(`match-${id}`).classList.add('ring-4', 'ring-blue-500');
+            } 
+            else if (side === 'right') {
+                if (!appState.selectedLeftMatch) {
+                    return;
+                }
+
+                const leftId = appState.selectedLeftMatch;
+                const rightId = id;
+
+                if (correctMatches[leftId] === rightId) {
+                    playSFX('success');
+                    
+                    const leftEl = document.getElementById(`match-${leftId}`);
+                    const rightEl = document.getElementById(`match-${rightId}`);
+
+                    leftEl.className = "bg-emerald-950/50 border-2 border-emerald-500 p-4 rounded-xl text-xs text-emerald-400 pointer-events-none select-none";
+                    rightEl.className = "bg-emerald-950/50 border-2 border-emerald-500 p-4 rounded-xl text-xs text-emerald-400 pointer-events-none select-none";
+
+                    appState.selectedLeftMatch = null;
+                    activeMatches[leftId] = rightId;
+
+                    if (Object.keys(activeMatches).length === 3) {
+                        document.getElementById('matching-feedback').classList.remove('hidden');
+                        appState.scoreProgress.matching = true;
+                        updateProgress();
+                    }
+                } else {
+                    playSFX('fail');
+                    const leftEl = document.getElementById(`match-${leftId}`);
+                    const rightEl = document.getElementById(`match-${rightId}`);
+                    
+                    leftEl.classList.add('border-rose-500', 'bg-rose-950/30');
+                    rightEl.classList.add('border-rose-500', 'bg-rose-950/30');
+
+                    setTimeout(() => {
+                        leftEl.classList.remove('border-rose-500', 'bg-rose-950/30', 'ring-4', 'ring-blue-500');
+                        rightEl.classList.remove('border-rose-500', 'bg-rose-950/30');
+                    }, 800);
+
+                    appState.selectedLeftMatch = null;
+                }
+            }
+        }
+
+
+        // --- LATIHAN C: DRAG AND DROP ---
+        const dragDropAnswers = {
+            'drag1': 'tersurat', 
+            'drag2': 'tersirat', 
+            'drag3': 'tersurat', 
+            'drag4': 'tersirat'  
+        };
+        const userDropProgress = {};
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+            appState.selectedDragItem = ev.target.id;
+        }
+
+        function dragEnter(el) {
+            el.classList.add('drop-zone-active');
+        }
+
+        function dragLeave(el) {
+            el.classList.remove('drop-zone-active');
+        }
+
+        // Drop logic
+        function drop(ev, category) {
+            ev.preventDefault();
+            const id = ev.dataTransfer.getData("text") || appState.selectedDragItem;
+            handleDropLogic(id, category);
+        }
+
+        document.querySelectorAll('.drag-item').forEach(item => {
+            item.addEventListener('click', () => {
+                playSFX('click');
+                document.querySelectorAll('.drag-item').forEach(i => i.classList.remove('ring-4', 'ring-indigo-500'));
+                item.classList.add('ring-4', 'ring-indigo-500');
+                appState.selectedDragItem = item.id;
+            });
+        });
+
+        function clickDrop(category) {
+            if (appState.selectedDragItem) {
+                handleDropLogic(appState.selectedDragItem, category);
+            }
+        }
+
+        function handleDropLogic(itemId, category) {
+            if (!itemId) return;
+
+            const expectedCategory = dragDropAnswers[itemId];
+            const itemElement = document.getElementById(itemId);
+
+            if (expectedCategory === category) {
+                playSFX('success');
+                playSFX('drop');
+
+                itemElement.classList.add('hidden');
+                
+                const targetContainer = document.getElementById(`dropped-${category}`);
+                const pill = document.createElement('div');
+                pill.className = "bg-emerald-950/40 border border-emerald-500/50 text-emerald-400 p-2.5 rounded-lg my-1.5 flex items-center gap-2 text-[11px] animate-fadeIn";
+                pill.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${itemElement.querySelector('span').innerText}`;
+                targetContainer.appendChild(pill);
+
+                userDropProgress[itemId] = true;
+                appState.selectedDragItem = null;
+
+                document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('drop-zone-active'));
+
+                if (Object.keys(userDropProgress).length === 4) {
+                    appState.scoreProgress.dragDrop = true;
+                    updateProgress();
+                    showToast("Luar biasa! Kamu berhasil menyortir seluruh jenis makna dengan akurat!");
+                }
+            } else {
+                playSFX('fail');
+                const targetZone = document.getElementById(`zone-${category === 'tersurat' ? 'explicit' : 'implicit'}`);
+                targetZone.classList.add('border-rose-500', 'bg-rose-950/20');
+                setTimeout(() => {
+                    targetZone.classList.remove('border-rose-500', 'bg-rose-950/20', 'drop-zone-active');
+                }, 800);
+            }
+        }
+
+
+        // --- MANAJEMEN TOAST ---
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerText = text;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+
+
+        // --- HALAMAN 4: REFLEKSI (LOCAL STORAGE) ---
+        function saveRefleksi() {
+            playSFX('click');
+            const q1 = document.getElementById('ref-q1').value;
+            const q2 = document.getElementById('ref-q2').value;
+
+            localStorage.setItem('sastrapintar_refleksi_q1', q1);
+            localStorage.setItem('sastrapintar_refleksi_q2', q2);
+            localStorage.setItem('sastrapintar_name', appState.studentName);
+
+            playSFX('success');
+            showToast("Refleksimu telah berhasil disimpan di dalam sistem browser!");
+        }
+
+        function loadRefleksi() {
+            const q1 = localStorage.getItem('sastrapintar_refleksi_q1');
+            const q2 = localStorage.getItem('sastrapintar_refleksi_q2');
+
+            if (q1) document.getElementById('ref-q1').value = q1;
+            if (q2) document.getElementById('ref-q2').value = q2;
+        }
+
+        function clearRefleksi() {
+            playSFX('click');
+            document.getElementById('ref-q1').value = '';
+            document.getElementById('ref-q2').value = '';
+            localStorage.removeItem('sastrapintar_refleksi_q1');
+            localStorage.removeItem('sastrapintar_refleksi_q2');
+            showToast("Formulir refleksi berhasil dibersihkan.");
+        }
+
+
+        // --- FITUR UTAMA FULLSCREEN LAYAR ---
+        function toggleFullScreen() {
+            playSFX('click');
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Gagal masuk mode fullscreen: ${err.message}`);
+                });
+                document.getElementById('fullscreen-icon').className = "fa-solid fa-compress";
+            } else {
+                document.exitFullscreen();
+                document.getElementById('fullscreen-icon').className = "fa-solid fa-expand";
+            }
+        }
+
+
+        // --- INSTALASI UTAMA SAAT WINDOWS LOAD ---
+        window.onload = function() {
+            const cachedName = localStorage.getItem('sastrapintar_name');
+            if (cachedName) {
+                document.getElementById('student-name').value = cachedName;
+            }
+            loadRefleksi();
+        };
+    </script>
+</body>
+</html>
